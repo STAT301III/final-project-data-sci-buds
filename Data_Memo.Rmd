@@ -1,0 +1,26 @@
+---
+title: "Data Memo"
+author: "Data Sci Buds"
+date: '2022-04-12'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+**Proposed Project Timeline**
+After choosing and initially analyzing our dataset, we plan to load our dataset into R, start cleaning our dataset and perform an initial EDA the week of April 18. Then, we plan on choosing and tuning our models the week after that. 
+
+**Overview of the Dataset**
+Our dataset is analyzing certain products for a superstore giant. They want to know what areas, products, regions, categories, and customer segments to avoid in order to have the highest sales or profit. The data set includes the product name, sales of the product, quantity of the product, any discounts provided, and the profit or loss incurred from the sale of the specific product. Along with this information, there is also buyer information including customer name, city and state residence of the customer, and region where the customer resides. 
+
+This dataset is a simple download from Kaggle. It contains almost 10,000 observations and 21 variables. 
+
+Citation: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
+
+
+**Potential Research Questions**
+
+
+**Difficulties**
