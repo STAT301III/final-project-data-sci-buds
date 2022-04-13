@@ -48,10 +48,13 @@ There is no need to join any data sources together. There does not appear to be 
 The profit from each transaction greatly varied. Since the store's objective is to maximize profit, I think it would be interesting to answer the following: 
 
 * How can we best predict profit given information about a particular transaction?
-* Which properties of a particular transaction have the largest effect on predicted profit?
-* Are there any significant interactions between properties that affect profit? 
 
-This is a **predictive question** since we want to predict profit—we don't care how we get to this prediction, we just want an accurate profit prediction. Since the response variable, profit, is numeric, this is a regression problem. We suspect that useful variables to predict price would be product name, product category, quantity sold, and sales.  
+This is a **predictive question** since we want to predict profit—we don't care how we get to this prediction, we just want an accurate profit prediction. Since the response variable, profit, is numeric, this is a regression problem. We suspect that useful variables to predict price would be product name, product category, quantity sold, and sales. Another predictive question would be:
+
+* How can we best predict the region a particular transaction took place in?
+
+This also is a **predictive** question, since we only want to predict region. The response variable, region (which gives a region in the US), is categorical, so this is a classification problem. We would remove other location variables (like city and state) from our model, because these would perfectly predict the region. We want to see if we can predict region based on the sale made, so example variables we would want to use to predict would be product name, quantity sold, and category of product sold. This would be interesting to see—do people in different regions of the US display different buying habits? This could help the store choose what to sell in different parts of the US. 
+
 <br>
 
 ## Difficulties
@@ -62,8 +65,8 @@ In addition, it may also be difficult to assess date variables (e.g. shipping da
 
 ## Citation 
 
-Citation: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
+https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
 
 ## Github Repo
-[YOUR GITHUB URL](https://github.com/STAT301III/final-project-data-sci-buds.gitL){target="_blank"}
+[https://github.com/STAT301III/final-project-data-sci-buds.git](https://github.com/STAT301III/final-project-data-sci-buds.git){target="_blank"}
 
