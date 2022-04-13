@@ -36,14 +36,15 @@ The profit from each transaction greatly varied. Since the store's objective is 
 <br>
 
 * How can we best predict profit given information about a particular transaction?
+* Which properties of a particular transaction have the largest effect on predicted profit?
 
 <br>
 
-This is a predictive question since we want to predict profit—we don't care how we get to this prediction, we just want an accurate profit prediction. Since the response variable, profit, is numeric, this is a regression problem. I suspect that useful variables to predict price would be product name, product category, quantity sold, and sales.  
+This is a predictive question since we want to predict profit—we don't care how we get to this prediction, we just want an accurate profit prediction. Since the response variable, profit, is numeric, this is a regression problem. We suspect that useful variables to predict price would be product name, product category, quantity sold, and sales.  
 
 
 ## Difficulties
-
+Some difficulties we might face could be regarding the time it takes to run all of the models with such a large database. In order to increase accuracy, we can increase the number of folds and repetitions for the models, but that might increase the time it takes for the models to finish running. 
 
 
 ## Citation 
@@ -51,3 +52,7 @@ This is a predictive question since we want to predict profit—we don't care ho
 <br>
 
 Citation: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
+
+## Github Repo
+[YOUR GITHUB URL](https://github.com/STAT301III/final-project-data-sci-buds.gitL){target="_blank"}
+
