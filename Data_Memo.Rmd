@@ -1,26 +1,52 @@
 ---
 title: "Data Memo"
-author: "Data Sci Buds"
+author: "Data Sci Buds (Pranav, Lily, Minjee, Tammy)"
 date: '2022-04-12'
-output: html_document
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
-**Proposed Project Timeline**
-After choosing and initially analyzing our dataset, we plan to load our dataset into R, start cleaning our dataset and perform an initial EDA the week of April 18. Then, we plan on choosing and tuning our models the week after that. 
+## Proposed Project Timeline
 
-**Overview of the Dataset**
-Our dataset is analyzing certain products for a superstore giant. They want to know what areas, products, regions, categories, and customer segments to avoid in order to have the highest sales or profit. The data set includes the product name, sales of the product, quantity of the product, any discounts provided, and the profit or loss incurred from the sale of the specific product. Along with this information, there is also buyer information including customer name, city and state residence of the customer, and region where the customer resides. 
+After choosing and initially analyzing our dataset, we plan to load our dataset into R, start cleaning our dataset and perform an initial EDA the week of April 18. Then, we plan on splitting data, making recipes, and fitting / tuning our models during the weeks of April 25th and May 2nd. During the week of May 9th, we hope to finish collecting / comparing metrics and also fit the best model to the test set and evaluate performance. Then, throughout the month of may, we hope to do the majority of writing for the executive summary and other narration parts. Ultimately, we hope to complete the project by June 5th.
+
+<br>
+
+## Overview of the Dataset
+
+Our dataset is analyzing certain products for a superstore giant. They want to know what areas, categories, and customer segments to avoid in order to have the highest sales or profit. They also want to know which products to focus on. 
+
+Each row represents a customer transaction for a specific product, and the columns (variables) give information about the transaction. The variables include the product name, product sales, quantity of the product sold (to that customer), discounts, and the profit or loss incurred from the sale of the specific product. Along with this information, there is also buyer information including customer name, city and state residence of the customer, and region where the customer resides.
 
 This dataset is a simple download from Kaggle. It contains almost 10,000 observations and 21 variables. 
 
+There is no need to join any data sources together. There does not appear to be any missingness in the dataset. It is very cleaned and useable. 
+
+
+## Potential Research Questions
+
+The profit from each transaction greatly varied. Since the store's objective is to maximize profit, I think it would be interesting to answer the following: 
+<br>
+
+* How can we best predict profit given information about a particular transaction?
+
+<br>
+
+This is a predictive question since we want to predict profit—we don't care how we get to this prediction, we just want an accurate profit prediction. Since the response variable, profit, is numeric, this is a regression problem. I suspect that useful variables to predict price would be product name, product category, quantity sold, and sales.  
+
+
+## Difficulties
+
+
+## Citation 
+
+<br>
+
 Citation: https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
-
-
-**Potential Research Questions**
-
-
-**Difficulties**
