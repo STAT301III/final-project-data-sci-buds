@@ -20,7 +20,7 @@ library(tidyverse)
 library(janitor)
 ```
 
-```{r, message = F, warning = F}
+```{r, message = F, warning = F, echo = F}
 superstore <- read_csv("Superstore_data.csv") %>% 
   clean_names()
 
@@ -28,8 +28,13 @@ superstore %>%
   naniar::miss_var_summary()
 ```
 
-```{r}
+After a quick scan of the data, it seems that there is no missingness for any of the variables. 
 
+```{r, message = F, warning = F, echo = F}
+ggplot(superstore, aes(x = state)) +
+  geom_bar() +
+  coord_flip() +
+  theme_minimal()
 ```
 
 
