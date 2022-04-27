@@ -1,0 +1,45 @@
+---
+title: "Exploratory Data Analysis"
+author: "Data Sci Buds (Pranav, Lily, Minjee, Tammy)"
+date: '2022-04-27'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r, echo = F, message = F, warning = F}
+library(tidyverse)
+library(janitor)
+```
+
+```{r, message = F, warning = F}
+superstore <- read_csv("Superstore_data.csv") %>% 
+  clean_names()
+
+superstore %>% 
+  naniar::miss_var_summary()
+```
+
+```{r}
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
