@@ -11,32 +11,6 @@ editor_options:
   chunk_output_type: console
 ---
 
-```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
-```
-
-```{r, echo = F, message = F, warning = F}
-library(tidyverse)
-library(janitor)
-```
-
-```{r, message = F, warning = F, echo = F}
-superstore <- read_csv("Superstore_data.csv") %>% 
-  clean_names()
-
-superstore %>% 
-  naniar::miss_var_summary()
-```
-
-After a quick scan of the data, it seems that there is no missingness for any of the variables. 
-
-```{r, message = F, warning = F, echo = F}
-ggplot(superstore, aes(x = state)) +
-  geom_bar() +
-  coord_flip() +
-  theme_minimal()
-```
-
 
 
 
