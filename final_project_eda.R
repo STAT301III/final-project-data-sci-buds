@@ -5,6 +5,7 @@ library(tidyverse)
 library(tidymodels)
 library(janitor)
 library(naniar)
+library(ggplot2)
 
 #read in 
 superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
@@ -43,5 +44,56 @@ gg_miss_var
 
 # essential findings  ----
 
+# response variables ----
+# univariate sales graph
+ggplot(superstore_dat, aes(sales)) +
+  geom_density() +
+  xlim(c(0,1000)) +
+  ggtitle("Sales of Products")
+
+# univariate profit graph
+ggplot(superstore_dat, aes(profit)) +
+  geom_density() +
+  xlim(c(-200, 300)) +
+  ggtitle("Profit or Loss Incurred from Sales")
+
+# important predictor variables
+
+# univariate category graph
+ggplot(superstore_dat, aes(category)) +
+  geom_bar() +
+  ggtitle("Category of Products Sold")
+
+# univariate subcategory graph
+ggplot(superstore_dat, aes(sub_category)) +
+  geom_bar() +
+  ggtitle("Subcategory of Products Sold") +
+  coord_flip()
+
+#univariate region graph
+ggplot(superstore_dat, aes(region)) +
+  geom_bar() +
+  ggtitle("Region where Customer is From")
+
+# univariate ship mode graph
+ggplot(superstore_dat, aes(ship_mode)) +
+  geom_bar() +
+  ggtitle("Order Ship Mode")
+
+# univariate discount graph
+ggplot(superstore_dat, aes(discount)) +
+  geom_density() +
+  ggtitle("Discount Provided")
+
+# univariate state graph
+ggplot(superstore_dat, aes(state)) +
+  geom_bar() +
+  ggtitle("Customer State of Residence") +
+  coord_flip()
+
+#univariate quantity graph
+ggplot(superstore_dat, aes(quantity)) +
+  geom_density() +
+  ggtitle("Quantity of the Product Ordered") 
 
 # secondary findings ----
