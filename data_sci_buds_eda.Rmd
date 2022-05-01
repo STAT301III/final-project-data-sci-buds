@@ -127,6 +127,129 @@ ggplot(superstore_dat, aes(state)) +
   coord_flip()
 ```
 
+```{r}
+# bivariate sub-category graph
+superstore_dat %>%
+  group_by(sub_category) %>%
+  mutate(avg_prf = mean(profit)) %>%
+  ggplot(aes(sub_category, avg_prf)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  labs(
+    title = "Average Profit for Different Sub-Categories",
+    x = "Subcategory",
+    y = "Average Profit"
+  ) +
+  theme(axis.text.x = element_text(angle = 90))
+
+# same plot not including copiers  
+superstore_dat %>%
+  group_by(sub_category) %>%
+  mutate(avg_prf = mean(profit)) %>%
+  ggplot(aes(sub_category, avg_prf)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  scale_y_continuous(limits = c(-60, 60),
+                     breaks = seq(-60, 60, 20)) +
+  labs(
+    title = "Average Profit for Different Sub-Categories",
+    subtitle = "(Not including Copiers sub-category)",
+    x = "Subcategory",
+    y = "Average Profit"
+  ) +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
+```{r}
+# bivariate discount graph - profit
+superstore_dat %>%
+  group_by(discount) %>%
+  mutate(avg_prf = mean(profit)) %>%
+  ggplot(aes(discount, avg_prf)) +
+  geom_bar(stat="identity", position=position_dodge(), width = 0.04) +
+  scale_x_continuous(limits = c(-0.05, 0.85),
+                     breaks = seq(-0.1, 0.8, 0.1),
+                     expand = c(0,0)) +
+  labs(
+    title = "Average Profit for Different Discount Values",
+    x = "Discount Value",
+    y = "Average Profit"
+  )
+
+# bivariate discount graph - sales
+superstore_dat %>%
+  group_by(discount) %>%
+  mutate(avg_sls = mean(sales)) %>%
+  ggplot(aes(discount, avg_sls)) +
+  geom_bar(stat="identity", position=position_dodge(), width = 0.04) +
+  scale_x_continuous(limits = c(-0.05, 0.85),
+                     breaks = seq(-0.1, 0.8, 0.1),
+                     expand = c(0,0)) +
+  labs(
+    title = "Average Sales for Different Discount Values",
+    x = "Discount Value",
+    y = "Average Sales"
+  )
+```
+
+```{r}
+# bivariate table - top 10 states in sales
+superstore_dat %>%
+  group_by(state) %>%
+  mutate(average_sales = mean(sales)) %>%
+  select(state, average_sales) %>%
+  arrange(desc(average_sales)) %>%
+  distinct() %>%
+  head(10)
+
+# bivariate table - top 10 states in profit 
+superstore_dat %>%
+  group_by(state) %>%
+  mutate(average_profit = mean(profit)) %>%
+  select(state, average_profit) %>%
+  arrange(desc(average_profit)) %>%
+  distinct() %>%
+  head(10)
+```
+
+```{r}
+# region sales contribution and segment composition
+superstore_dat %>%
+  group_by(region) %>%
+  mutate(avg_sls = mean(sales)) %>%
+  ggplot(aes(x = region, y = avg_sls, fill = segment)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(0, 750000),
+                     breaks = seq(0, 800000, 100000),
+                     expand = c(0,0),
+                     labels = comma) +
+  labs(
+    title = "Region Sales and Segment Composition",
+    x = "Region",
+    y = "Average Sales",
+    fill = "Customer Segment"
+  ) + 
+  theme_light()
+
+# west region state sales and segment
+superstore_dat %>%
+  filter(region == "West") %>%
+  group_by(state) %>% 
+  mutate(avg_sls = mean(sales)) %>%
+  ggplot(aes(x = state, y = avg_sls, fill = segment)) +
+  geom_bar(stat="identity") +
+  scale_y_continuous(limits = c(0, 475000),
+                     breaks = seq(0, 500000, 50000),
+                     expand = c(0,0),
+                     labels = comma) +
+  labs(
+    title = "Western States Sales and Segment Composition",
+    x = "State",
+    y = "Average Sales",
+    fill = "Customer Segment"
+  ) + 
+  theme_light() +
+  theme(axis.text.x = element_text(angle = 90))
+```
+
 
 # Secondary Findings
 
@@ -143,7 +266,7 @@ ggplot(superstore_dat, aes(quantity)) +
 # univariate ship mode graph
 ggplot(superstore_dat, aes(ship_mode)) +
   geom_bar() +
-  ggtitle("Order Ship Mode")
+  ggtitle("Order Ship Mode")  
 ```
 
 
