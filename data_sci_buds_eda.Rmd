@@ -7,11 +7,12 @@ output:
     toc: true
     toc_float: true
     highlight: "tango"
+    code_folding: "hide"
 editor_options: 
   chunk_output_type: console
 ---
 
-```{r include=FALSE}
+```{r include=FALSE, warning = F}
 #load packages 
 library(tidyverse)
 library(tidymodels)
@@ -20,7 +21,7 @@ library(naniar)
 library(ggplot2)
 ```
 
-```{r}
+```{r, warning = F, message = F}
 #read in 
 superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
   clean_names()
@@ -28,7 +29,7 @@ superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>%
 
 # Initial Split of Data
 
-```{r}
+```{r, warning = F, message = F}
 # initial split 
 #split data
 superstore_split <- 
@@ -40,7 +41,7 @@ superstore_train <- training(superstore_split)
 superstore_test <- testing(superstore_split)
 ```
 
-```{r}
+```{r, message = F, warning = F}
 #folds
 superstore_resamples <- 
   superstore_train %>% 
@@ -49,19 +50,19 @@ superstore_resamples <-
 
 # Initial Overview of Data
 
-```{r}
+```{r, message = F, warning = F}
 #9994 observations and 21 features 
 dim(superstore_dat)
 ```
 
-```{r}
+```{r, message = F, warning = F}
 #check for missingness 
 miss_var_table <- miss_var_table(superstore_train)
 miss_var_summary <- miss_var_summary(superstore_train)
 gg_miss_var <- gg_miss_var(superstore_train)
 ```
 
-```{r}
+```{r, message = F, warning = F}
 #no missingness in the data 
 miss_var_table
 miss_var_summary
@@ -72,7 +73,7 @@ gg_miss_var
 
 ## Response Variables
 
-```{r}
+```{r, message = F, warning = F}
 # univariate profit graph
 ggplot(superstore_dat, aes(profit)) +
   geom_density() +
@@ -80,7 +81,11 @@ ggplot(superstore_dat, aes(profit)) +
   ggtitle("Profit or Loss Incurred from Sales")
 ```
 
-```{r}
+<br>
+We can see that profit peaks at around $10-15 thousand. 
+<br><br>
+
+```{r, warning = F, message = F}
 # univariate sales graph
 ggplot(superstore_dat, aes(sales)) +
   geom_density() +
@@ -88,16 +93,24 @@ ggplot(superstore_dat, aes(sales)) +
   ggtitle("Sales of Products")
 ```
 
+<br>
+Here we can see that product sales peaks at around 70-90 thousand products. 
+<br><br>
+
 ## Important Predictor Variables
 
-```{r}
+```{r, warning = F, message = F}
 # univariate category graph
 ggplot(superstore_dat, aes(category)) +
   geom_bar() +
   ggtitle("Category of Products Sold")
 ```
 
-```{r}
+<br>
+Out of the products sold, office supplies were sold the most and technology was sold the least.
+<br><br>
+
+```{r, warning = F, message = F}
 # univariate subcategory graph
 ggplot(superstore_dat, aes(sub_category)) +
   geom_bar() +
@@ -105,21 +118,33 @@ ggplot(superstore_dat, aes(sub_category)) +
   coord_flip()
 ```
 
-```{r}
+<br>
+Out of the subcategories of products sold, binders were sold the most and copiers were sold the least. The top 2 subcategories (binders and paper) are both under office supplies so it makes sense that office supplies are the most sold category of products. 
+<br><br>
+
+```{r, warning = F, message = F}
 #univariate region graph
 ggplot(superstore_dat, aes(region)) +
   geom_bar() +
   ggtitle("Region where Customer is From")
 ```
 
-```{r}
+<br>
+The most number of customers are from the Western area of the US while the least number of customers are from the Southern area of the US.
+<br><br>
+
+```{r, warning = F, message = F}
 # univariate discount graph
 ggplot(superstore_dat, aes(discount)) +
   geom_density() +
   ggtitle("Discount Provided")
 ```
 
-```{r}
+<br>
+For discounts provided, the largest discount provided is 0%, but there is also another peak at 20%, indicating that there might be certain sales throughout the year that are specifically 20% off discounts. 
+<br><br>
+
+```{r, warning = F, message = F}
 # univariate state graph
 ggplot(superstore_dat, aes(state)) +
   geom_bar() +
@@ -127,7 +152,11 @@ ggplot(superstore_dat, aes(state)) +
   coord_flip()
 ```
 
-```{r}
+<br>
+The majority of customers are from California, which correlates with the largest number of customers coming from the Western area of the US. 
+<br><br>
+
+```{r, warning = F, message = F}
 # bivariate sub-category graph
 superstore_dat %>%
   group_by(sub_category) %>%
@@ -145,7 +174,7 @@ superstore_dat %>%
 From the graph above we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800.
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # same plot not including copiers  
 superstore_dat %>%
   group_by(sub_category) %>%
@@ -166,7 +195,7 @@ superstore_dat %>%
 Omitting the copiers for a closer look on the other subcategories, we can see that they average around 30 in mean profit. In addition, the bookcases, supplies and tables subcategories are negative in profit, with the tables subcategory having the greatest loss of around 55. 
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # bivariate discount graph - profit
 superstore_dat %>%
   group_by(discount) %>%
@@ -186,7 +215,7 @@ superstore_dat %>%
 From the relationship between discount and profit, we can see that discount values above 0.3 generally bring a loss as opposed to a profit, with losses peaking at a discount value of 0.5. The discount value that brings the most average profit is 0.1.
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # bivariate discount graph - sales
 superstore_dat %>%
   group_by(discount) %>%
@@ -206,7 +235,7 @@ superstore_dat %>%
 Contrastingly, average sales are reflected differently with discounts, with a 0.5 discount bringing the highest average sales of over 875, and the 0.1 discount coming second highest in sales. Depending on whether the supermarket chooses to maximize profit or revenue, they can choose discount values of 0.1 for the former and 0.5 for the latter. 
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # bivariate table - top 10 states in sales
 superstore_dat %>%
   group_by(state) %>%
@@ -229,7 +258,7 @@ superstore_dat %>%
 Shown above are two tables showing respectively the top 10 states with the highest average sales and average profit. The two tables have a high overlap of 7 out of 10 states: Wyoming, Vermont, Rhode Island, Montana, Indiana, Missouri, and Minnesota. In particular, Vermont is highest in profit and second highest in sales.
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # region sales contribution and segment composition
 superstore_dat %>%
   group_by(region) %>%
@@ -253,7 +282,7 @@ superstore_dat %>%
 This stacked bar graph shows the average sales contribution and customer segment composition of each region. We can see that in general, the consumer segment brings a larger sales contribution as opposed to corporate and home office segments, and the West region is highest in average sales.
 <br><br>
 
-```{r}
+```{r, warning = F, message = F}
 # west region state sales and segment
 superstore_dat %>%
   filter(region == "West") %>%
@@ -282,21 +311,27 @@ This stacked bar graph in turn shows the average sales and customer segment comp
 
 ## Standard Variable Explorations
 
-```{r}
+```{r, warning = F, message = F}
 #univariate quantity graph
 ggplot(superstore_dat, aes(quantity)) +
   geom_density() +
   ggtitle("Quantity of the Product Ordered") 
 ```
 
-```{r}
+<br>
+In this graph, there are 2 large peaks, indicating that there are different quantities where customers bought the most. The quantities are 2 and 3 so a lot of people bought 2 or 3 products from this store. 
+<br><br>
+
+```{r, warning = F, message = F}
 # univariate ship mode graph
 ggplot(superstore_dat, aes(ship_mode)) +
   geom_bar() +
   ggtitle("Order Ship Mode")  
 ```
 
-
+<br>
+The majority of people used standard class shipping while the least number of people used same day shipping. This makes sense since standard class shipping is the cheapest while same day shipping is the most expensive. 
+<br><br>
 
 
 
