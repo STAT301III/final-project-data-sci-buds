@@ -21,11 +21,24 @@ library(naniar)
 library(ggplot2)
 ```
 
+# Read in Data & Intro 
+
 ```{r, warning = F, message = F}
 #read in 
 superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
   clean_names()
 ```
+
+<br>
+
+The dataset involves purchase information for different products sold in a large superstore. The dataset was collected by the company itself. Each row is a customer transaction, and the columns represent different information for that transaction (like product name, quantity sold, profit, etc.). The data is from kaggle. A citation is attached below. 
+
+<br>
+
+https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
+
+<br>
+
 
 # Initial Split of Data
 
@@ -41,12 +54,11 @@ superstore_train <- training(superstore_split)
 superstore_test <- testing(superstore_split)
 ```
 
-```{r, message = F, warning = F}
-#folds
-superstore_resamples <- 
-  superstore_train %>% 
-  vfold_cv(v = 5, repeats = 3, strata = profit)
-```
+<br>
+
+First we split the data into training and test set. We want to conduct the EDA on the training data. Ideally, we could subset a portion of the data just for EDA, but we prefer to conserve some data. 
+
+<br>
 
 # Initial Overview of Data
 
@@ -55,19 +67,24 @@ superstore_resamples <-
 dim(superstore_dat)
 ```
 
-```{r, message = F, warning = F}
-#check for missingness 
-miss_var_table <- miss_var_table(superstore_train)
-miss_var_summary <- miss_var_summary(superstore_train)
-gg_miss_var <- gg_miss_var(superstore_train)
-```
+<br>
+
+We see that there are 9994 observations and 21 features in the data.
+
+<br>
 
 ```{r, message = F, warning = F}
-#no missingness in the data 
-miss_var_table
-miss_var_summary
-gg_miss_var
+#check for missingness 
+miss_var_table(superstore_train)
+miss_var_summary(superstore_train)
+gg_miss_var(superstore_train)
 ```
+
+<br>
+
+As we see above, there is no missingness in the data. Hence, there will be nothing for us to address in this respect. We considered adding on another dataset to gain more information about income for a customer's zip code, but some of these datasets had a great deal of missingess or are just inaccessible. We have yet to find a good income per zip code dataset that we could potentially merge with our current dataset.  
+
+<br>
 
 # Essential Findings
 
@@ -77,25 +94,29 @@ gg_miss_var
 # univariate profit graph
 ggplot(superstore_dat, aes(profit)) +
   geom_density() +
-  xlim(c(-200, 300)) +
+  xlim(c(-100, 150)) +
   ggtitle("Profit or Loss Incurred from Sales")
 ```
 
 <br>
-We can see that profit peaks at around $10-15 thousand. 
-<br><br>
+
+We can see that profit peaks at around $10-15 per product transaction.  
+
+<br>
 
 ```{r, warning = F, message = F}
 # univariate sales graph
 ggplot(superstore_dat, aes(sales)) +
   geom_density() +
-  xlim(c(0,1000)) +
+  xlim(c(0,500)) +
   ggtitle("Sales of Products")
 ```
 
 <br>
-Here we can see that product sales peaks at around 70-90 thousand products. 
-<br><br>
+
+Here we can see that sales (revenue) peaks at around $30 per product transaction. There is a clear right skew, which is what we would expect. There are some transactions that have exhibit a high sales value, probably for expensive items, but these are relatively uncommon in occurrence.
+
+<br>
 
 ## Important Predictor Variables
 
@@ -171,7 +192,7 @@ superstore_dat %>%
   theme(axis.text.x = element_text(angle = 90))
 ```
 <br>
-From the graph above we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800.
+From the graph above we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800. This is a very interesting relationship between response and predictor variable. From this, I think that the subcategory of profit is going to be very important when predicting profit, especially because of the huge profits brought by copiers! I wonder why they probably upcharge on copiers so much. Maybe that is just the market rate?
 <br><br>
 
 ```{r, warning = F, message = F}
@@ -279,7 +300,7 @@ superstore_dat %>%
 
 ```
 <br>
-This stacked bar graph shows the average sales contribution and customer segment composition of each region. We can see that in general, the consumer segment brings a larger sales contribution as opposed to corporate and home office segments, and the West region is highest in average sales.
+This stacked bar graph shows the average sales contribution and customer segment composition of each region. This  shows many interesting findings between predictor variables. First, we can see that in general, the consumer segment brings a larger sales contribution as opposed to corporate and home office segment. Second, we can see that the West region is highest in average sales. Third, it looks like for the Home Office segment, West and East have the highest sales. Maybe a lot of people work from home here? 
 <br><br>
 
 ```{r, warning = F, message = F}
@@ -319,7 +340,7 @@ ggplot(superstore_dat, aes(quantity)) +
 ```
 
 <br>
-In this graph, there are 2 large peaks, indicating that there are different quantities where customers bought the most. The quantities are 2 and 3 so a lot of people bought 2 or 3 products from this store. 
+In this graph, there are 2 large peaks, indicating that there are different quantities where customers bought the most. The quantities are 2 and 3 so a lot of people bought 2 or 3 products from this store. This is unsurprising, because we could expect that most transactions involve a low quantity of a product bought. Most people wouldn't have use for more than one of a specific product—also, it would be more expensive to buy more. 
 <br><br>
 
 ```{r, warning = F, message = F}
@@ -330,8 +351,13 @@ ggplot(superstore_dat, aes(ship_mode)) +
 ```
 
 <br>
-The majority of people used standard class shipping while the least number of people used same day shipping. This makes sense since standard class shipping is the cheapest while same day shipping is the most expensive. 
+The majority of people used standard class shipping while the least number of people used same day shipping. This makes sense since standard class shipping is the cheapest while same day shipping is the most expensive. However, this could still be a very useful variable to employ. It is possible that, for examples, copiers (which give a super high profit on average as previously shown) are shipped commonly in one specific way. Maybe since they are often bought by business, business don't mind paying extra and getting it quicker. Hence, this could prove to be a very important variable. 
 <br><br>
+
+Overall, this EDA is important because we want to know how to transform variables via feature engineering to make our model as predictive as possible. For example, if some variables have a heavy skew, we could consider doing a log transformation. Also, it might be useful to see if there is a super high correlation between two predictor variables. If there is, then we might want to avoid some model types that are sensitive to this issue (like multiple linear regression). We could consider some principal component analysis if it makes sense. It was interesting to see different relationships between our variables in the first place. For example, it is interesting to see which segments of sales are common in different areas in the country. This might be due to different consumer preferences and could certainly be useful for the store when deciding which products to ship to different US stores.
+
+# Github  Repo 
+[https://github.com/STAT301III/final-project-data-sci-buds.git](https://github.com/STAT301III/final-project-data-sci-buds.git){target="_blank"}
 
 
 
