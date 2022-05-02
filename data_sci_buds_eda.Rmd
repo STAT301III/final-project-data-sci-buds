@@ -140,7 +140,12 @@ superstore_dat %>%
     y = "Average Profit"
   ) +
   theme(axis.text.x = element_text(angle = 90))
+```
+<br>
+From the graph above we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800.
+<br><br>
 
+```{r}
 # same plot not including copiers  
 superstore_dat %>%
   group_by(sub_category) %>%
@@ -157,6 +162,9 @@ superstore_dat %>%
   ) +
   theme(axis.text.x = element_text(angle = 90))
 ```
+<br>
+Omitting the copiers for a closer look on the other subcategories, we can see that they average around 30 in mean profit. In addition, the bookcases, supplies and tables subcategories are negative in profit, with the tables subcategory having the greatest loss of around 55. 
+<br><br>
 
 ```{r}
 # bivariate discount graph - profit
@@ -173,7 +181,12 @@ superstore_dat %>%
     x = "Discount Value",
     y = "Average Profit"
   )
+```
+<br>
+From the relationship between discount and profit, we can see that discount values above 0.3 generally bring a loss as opposed to a profit, with losses peaking at a discount value of 0.5. The discount value that brings the most average profit is 0.1.
+<br><br>
 
+```{r}
 # bivariate discount graph - sales
 superstore_dat %>%
   group_by(discount) %>%
@@ -189,6 +202,9 @@ superstore_dat %>%
     y = "Average Sales"
   )
 ```
+<br>
+Contrastingly, average sales are reflected differently with discounts, with a 0.5 discount bringing the highest average sales of over 875, and the 0.1 discount coming second highest in sales. Depending on whether the supermarket chooses to maximize profit or revenue, they can choose discount values of 0.1 for the former and 0.5 for the latter. 
+<br><br>
 
 ```{r}
 # bivariate table - top 10 states in sales
@@ -209,6 +225,9 @@ superstore_dat %>%
   distinct() %>%
   head(10)
 ```
+<br>
+Shown above are two tables showing respectively the top 10 states with the highest average sales and average profit. The two tables have a high overlap of 7 out of 10 states: Wyoming, Vermont, Rhode Island, Montana, Indiana, Missouri, and Minnesota. In particular, Vermont is highest in profit and second highest in sales.
+<br><br>
 
 ```{r}
 # region sales contribution and segment composition
@@ -229,6 +248,12 @@ superstore_dat %>%
   ) + 
   theme_light()
 
+```
+<br>
+This stacked bar graph shows the average sales contribution and customer segment composition of each region. We can see that in general, the consumer segment brings a larger sales contribution as opposed to corporate and home office segments, and the West region is highest in average sales.
+<br><br>
+
+```{r}
 # west region state sales and segment
 superstore_dat %>%
   filter(region == "West") %>%
@@ -249,7 +274,9 @@ superstore_dat %>%
   theme_light() +
   theme(axis.text.x = element_text(angle = 90))
 ```
-
+<br>
+This stacked bar graph in turn shows the average sales and customer segment composition of the Western states, where California seems to bring the highest sales contribution, with Washington as second highest. 
+<br><br>
 
 # Secondary Findings
 
