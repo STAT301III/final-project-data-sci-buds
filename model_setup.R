@@ -57,4 +57,4 @@ superstore_rec %>%
 
 # save data
 save(superstore_train, superstore_test, superstore_resamples, keep_pred, 
-     superstore_rec, file = "model_info/dat_setup.rda")
+     superstore_rec, file = "model_info/model_setup.rda")
