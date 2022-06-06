@@ -1,7 +1,7 @@
 ## model specs
 # model workflow
 
-# load packages
+# load packages----
 library(tidyverse)
 library(tidymodels)
 library(tictoc)
@@ -15,7 +15,7 @@ set.seed(3013)
 # load recipe
 load(file = "model_info/model_setup.rda")
 
-# define models
+# define models----
 enet_spec <- 
   linear_reg(mode = "regression",
              penalty = tune(), 
@@ -58,7 +58,7 @@ mars_spec <- mars(mode = "regression",
                   prod_degree = tune()) %>%  
   set_engine("earth") 
 
-# set up tuning grid
+# set up tuning grid----
 enet_params <- parameters(enet_spec)
 knn_params <- parameters(knn_spec)
 
@@ -74,7 +74,7 @@ svm_r_params <- parameters(svm_r_spec)
 nnet_params <- parameters(nnet_spec)
 mars_params <- parameters(mars_spec)
 
-# define tuning grid
+# define tuning grid----
 enet_grid <- grid_regular(enet_params, levels = 3)
 knn_grid <- grid_regular(knn_params, levels = 3)
 rf_grid <- grid_regular(rf_params, levels = 3)
@@ -182,3 +182,13 @@ show_best(nnet_tuned, metric = "rmse") %>% head(1)
 show_best(mars_tuned, metric = "rmse") %>% head(1)
 
 # svm p the lowest rmse but took the longest, rf the next best
+
+#fit best model to training ----
+svm_r_wflow_tuned <- svm_r_workflow %>% 
+  finalize_workflow(select_best(svm_p_tuned, metric = "rmse"))
+
+svm_r_results <- fit(svm_r_wflow_tuned, superstore_train)
+
+
+
+
