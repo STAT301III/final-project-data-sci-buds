@@ -184,11 +184,19 @@ show_best(mars_tuned, metric = "rmse") %>% head(1)
 # svm p the lowest rmse but took the longest, rf the next best
 
 #fit best model to training ----
-svm_r_wflow_tuned <- svm_r_workflow %>% 
+svm_p_wflow_tuned <- svm_p_workflow %>% 
   finalize_workflow(select_best(svm_p_tuned, metric = "rmse"))
 
-svm_r_results <- fit(svm_r_wflow_tuned, superstore_train)
+svm_p_results <- fit(svm_p_wflow_tuned, superstore_train)
 
+# predict ----
 
+superstore_rmse <- metric_set(rmse)
+
+svm_p_rmse_test <- predict(svm_p_results, new_data = superstore_test) %>% 
+  bind_cols(superstore_test %>% select(profit)) %>% 
+  superstore_rmse(truth = profit, estimate = .pred)
+
+save(svm_p_wflow_tuned, svm_p_results, svm_p_rmse_test, file = "results/best_model_fit_metric.rda")
 
 
