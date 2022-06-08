@@ -13,6 +13,9 @@ editor_options:
 ---
 
 ## Data and Research Question
+The dataset involves purchase information for different products sold in a large superstore. The dataset was collected by the company itself. Each row is a customer transaction, and the columns represent different information for that transaction (like product name, quantity sold, profit, etc.). Our research question is: what variables affect how much profit the company earns on a specific transaction? 
+<br>
+**Citation:** https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
 
 ```{r, message = F, warning = F, error = F}
 #load packages 
@@ -22,6 +25,7 @@ library(janitor)
 library(naniar)
 library(ggplot2)
 
+# load data
 superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
   clean_names() %>% 
   mutate(
@@ -36,13 +40,18 @@ superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>%
 ```
 
 ## EDA
+
+From the graph below, we can see that profit peaks at around $10-15 per product transaction.
 ```{r, message = F, warning = F}
 # univariate profit graph
 ggplot(superstore_dat, aes(profit)) +
   geom_density() +
   xlim(c(-100, 150)) +
   ggtitle("Profit or Loss Incurred from Sales")
+```
 
+From the graph below we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800. This is a very interesting relationship between response and predictor variable. From this, I think that the subcategory of profit is going to be very important when predicting profit, especially because of the huge profits brought by copiers! I wonder why they probably upcharge on copiers so much. Maybe that is just the market rate?
+```{r, message = F, warning = F}
 # bivariate sub-category graph
 superstore_dat %>%
   group_by(sub_category) %>%
@@ -55,6 +64,13 @@ superstore_dat %>%
     y = "Average Profit"
   ) +
   theme(axis.text.x = element_text(angle = 90))
+```
+
+
+```{r, message = F, warning = F}
+
+
+
 
 # bivariate discount graph - profit
 superstore_dat %>%
