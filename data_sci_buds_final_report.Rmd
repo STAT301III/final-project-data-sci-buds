@@ -50,7 +50,8 @@ ggplot(superstore_dat, aes(profit)) +
   ggtitle("Profit or Loss Incurred from Sales")
 ```
 
-From the graph below we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800. This is a very interesting relationship between response and predictor variable. From this, I think that the subcategory of profit is going to be very important when predicting profit, especially because of the huge profits brought by copiers! I wonder why they probably upcharge on copiers so much. Maybe that is just the market rate?
+From the graph below we can see that the copier subcategory brings exceptionally more profit than the other subcategories, with an average around 800. This is a very interesting relationship between response and predictor variable. From this, we believe that the subcategory of profit is going to be very important when predicting profit, especially because of the huge profits brought by copiers.
+
 ```{r, message = F, warning = F}
 # bivariate sub-category graph
 superstore_dat %>%
@@ -66,12 +67,9 @@ superstore_dat %>%
   theme(axis.text.x = element_text(angle = 90))
 ```
 
+From the relationship between discount and profit, we can see that discount values above 0.3 generally bring a loss as opposed to a profit, with losses peaking at a discount value of 0.5. The discount value that brings the most average profit is 0.1.
 
 ```{r, message = F, warning = F}
-
-
-
-
 # bivariate discount graph - profit
 superstore_dat %>%
   group_by(discount) %>%
@@ -86,7 +84,11 @@ superstore_dat %>%
     x = "Discount Value",
     y = "Average Profit"
   )
+```
 
+From the table below, we can see that Vermont is highest in profit and second highest in sales, followed by Rhode Island, Indiana, Montana, and Minnesota. 
+
+```{r, message = F, warning = F}
 # bivariate table - top 10 states in profit 
 superstore_dat %>%
   group_by(state) %>%
@@ -98,7 +100,10 @@ superstore_dat %>%
 ```
 
 
-## MODEL FITTING
+## Model Fitting
+
+First, we split the data into a training and testing set, splitting it by using 80% as the proportion of data that is in the training set and 20% in the testing set. The training set will be used to create the models, while the testing set will be used to fit the final models. We stratified the data by the target variable, profit, to counter for class imbalances in the data. Next, we performed a v-fold cross validation and folded the training data, using 5 folds and 3 repeats. Since resampling is only performed on the training set, it helps us understand the effectiveness of the model before using the test set. 
+
 ```{r, message = F, error = F, warning = F}
 # data splitting
 superstore_split <- 
@@ -113,7 +118,11 @@ superstore_test <- testing(superstore_split)
 superstore_resamples <- 
   superstore_train %>% 
   vfold_cv(v = 5, repeats = 3, strata = profit)
+```
 
+For the recipe, we used `step_rm` to remove certain predictors that we knew would not help predict profit at all, such as `row_id`, `customer_id`, `customer_name`, and other shipping information. We used a couple `step_` functions for this recipe - `step_other`, which pools infrequently occurring values into an "other" category, `step_dummy`, which converts the nominal data into numeric binary model terms, `step_normalize`, which normalizes all the numeric predictors to have a standard deviation of 1 and a mean of 0, and finally, we used `step_nvz` on all predictors, so that variables that are highly unbalanced and sparse would be removed.  
+
+```{r, message = F, error = F, warning = F}
 # set up recipe
 superstore_rec <- recipe(profit ~ ., data = superstore_dat) %>%
   step_rm(row_id, order_id, order_date, ship_date, customer_id, customer_name,
@@ -127,7 +136,10 @@ superstore_rec <- recipe(profit ~ ., data = superstore_dat) %>%
 load(file = "model_info/model_setup.rda")
 ```
 
+
 ### Elastic Net
+
+We trained and tuned an elastic net model, setting up a workflow, and adding the recipe above. We tuned the penalty and mixture of the model. 
 ```{r, eval = F}
 # define model
 enet_spec <- 
@@ -146,6 +158,7 @@ enet_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+We can see that the best elastic net model has a penalty of 1 and a mixture of 0.05, which yielded an rmse of 181. 
 ```{r}
 load(file = "results/tuned_models.rda")
 
@@ -153,6 +166,8 @@ show_best(enet_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### K Nearest Neighbor
+
+We trained and tuned a k nearest neighbor model, setting up a workflow, and adding the recipe above. We tuned the number of neighbors in this model.
 ```{r, eval = F}
 # define model
 knn_spec <- nearest_neighbor(mode = "regression",
@@ -169,11 +184,14 @@ knn_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best k nearest neighbors model had 8 neighbors, which yielded an rmse of 170, which is better than the elastic net model above.
 ```{r}
 show_best(knn_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Random Forest
+
+We trained and tuned a random forest model, setting up a workflow, and adding the recipe above. For the limits for mtry, we set 1 as the lower limit and 20 as the upper limit, and we tuned min_n as well.
 ```{r, eval = F}
 # define model
 rf_spec <- rand_forest(mode = "regression",
@@ -193,11 +211,14 @@ rf_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best random forest model has an mtry of 20 and a min_n of 2. The rmse is 110, which is better than both the elastic net and k nearest neighbors models above.
 ```{r}
 show_best(rf_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Boosted Tree
+
+We trained and tuned a boosted tree model, setting up a workflow, and adding the recipe above. For the limits for mtry, we set 1 as the lower limit and 20 as the upper limit. We also tuned learn_rate and min_n.
 ```{r, eval = F}
 # define model
 boost_spec <- boost_tree(mode = "regression",
@@ -219,11 +240,14 @@ boost_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best boosted tree model has an mtry of 20, min_n of 2, and a learn rate of 0.631. The rmse is 112, which is slightly worse than the random forest model above. 
 ```{r}
 show_best(boost_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Support Vector Machine Polynomial
+
+We trained and tuned a support vector machine polynomial model, setting up a workflow, and adding the recipe above. We tuned cost, degree, and scale_factor.
 ```{r, eval = F}
 # define model
 svm_p_spec <- svm_poly(mode = "regression",
@@ -242,11 +266,14 @@ svm_r_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best support vector machine polynomial model has a cost of 32, degree of 2, an a scale factor of 0.1, which yielded an rmse of 94.9, which is better than all of the previous models we have tested.
 ```{r}
 show_best(svm_p_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Support Vector Machine Radial Base Function
+
+We trained and tuned a support vector machine radial base function model, setting up a workflow, and adding the recipe above. We tuned cost and rbf_sigma.
 ```{r, eval = F}
 # define model
 svm_r_spec <- svm_rbf(mode = "regression",
@@ -264,11 +291,14 @@ svm_p_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best support vector machine radial basis function model has a cost of 32 and an rbf_sigma of 0.00001, which yielded an rmse of 190, meaning that it is one of our worse models because of its high rmse. 
 ```{r}
 show_best(svm_r_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Single Layer Neural Network
+
+We trained and tuned a single layer neural network model, setting up a workflow, and adding the recipe above. We tuned hidden_units and penalty. 
 ```{r, eval = F}
 # define model
 nnet_spec <- mlp(mode = "regression",
@@ -286,11 +316,13 @@ nnet_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best single layer neural network model has 10 hidden_units and a penalty of 1, which yielded an rmse of 178, making it better than the svm_r model above but still worse than the boosted tree, svm_p, and random forest models. 
 ```{r}
 show_best(nnet_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### MARS
+We trained and tuned a MARS model, setting up a workflow, and adding the recipe above. We tuned num_terms and prod_degree. 
 ```{r, eval = F}
 # define model
 mars_spec <- mars(mode = "regression",
@@ -308,11 +340,14 @@ mars_workflow <- workflow() %>%
   add_recipe(superstore_rec)
 ```
 
+The best MARS model has 5 num_terms and a prod_degree of 2, yielding an rmse of 155. 
 ```{r}
 show_best(mars_tuned, metric = "rmse") %>% head(1)
 ```
 
 ## Best Model Fitting
+
+We can see from all 8 models above that the best model is the support vector machine polynomial model, which yielded the lowest rmse of 94.9. The other models that  We then fit this winning model to the testing set, which ended up yielding a higher rmse of 167.
 ```{r}
 load("results/best_model_fit_metric.rda")
 
@@ -320,6 +355,8 @@ svm_p_rmse_test
 ```
 
 ## Debrief and Next Steps
+
+Overall, we tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network
 
 
 
