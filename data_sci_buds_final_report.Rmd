@@ -12,6 +12,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Data and Research Question
+
 ```{r, message = F, warning = F, error = F}
 #load packages 
 library(tidyverse)
@@ -34,6 +36,50 @@ superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>%
 ```
 
 ## EDA
+```{r, message = F, warning = F}
+# univariate profit graph
+ggplot(superstore_dat, aes(profit)) +
+  geom_density() +
+  xlim(c(-100, 150)) +
+  ggtitle("Profit or Loss Incurred from Sales")
+
+# bivariate sub-category graph
+superstore_dat %>%
+  group_by(sub_category) %>%
+  mutate(avg_prf = mean(profit)) %>%
+  ggplot(aes(sub_category, avg_prf)) +
+  geom_bar(stat="identity", position=position_dodge()) +
+  labs(
+    title = "Average Profit for Different Sub-Categories",
+    x = "Subcategory",
+    y = "Average Profit"
+  ) +
+  theme(axis.text.x = element_text(angle = 90))
+
+# bivariate discount graph - profit
+superstore_dat %>%
+  group_by(discount) %>%
+  mutate(avg_prf = mean(profit)) %>%
+  ggplot(aes(discount, avg_prf)) +
+  geom_bar(stat="identity", position=position_dodge(), width = 0.04) +
+  scale_x_continuous(limits = c(-0.05, 0.85),
+                     breaks = seq(-0.1, 0.8, 0.1),
+                     expand = c(0,0)) +
+  labs(
+    title = "Average Profit for Different Discount Values",
+    x = "Discount Value",
+    y = "Average Profit"
+  )
+
+# bivariate table - top 10 states in profit 
+superstore_dat %>%
+  group_by(state) %>%
+  mutate(average_profit = mean(profit)) %>%
+  select(state, average_profit) %>%
+  arrange(desc(average_profit)) %>%
+  distinct() %>%
+  head(10)
+```
 
 
 ## MODEL FITTING

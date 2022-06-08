@@ -12,6 +12,8 @@ editor_options:
   chunk_output_type: console
 ---
 
+## Data and Research Question
+
 ```{r, message = F, warning = F, echo = F}
 #load packages 
 library(tidyverse)
@@ -39,6 +41,22 @@ load(file = "results/tuned_models.rda")
 ```
 
 ## EDA
+```{r, message = F, warning = F, echo = F}
+# univariate profit graph
+ggplot(superstore_dat, aes(profit)) +
+  geom_density() +
+  xlim(c(-100, 150)) +
+  ggtitle("Profit or Loss Incurred from Sales")
+
+# bivariate table - top 10 states in profit 
+superstore_dat %>%
+  group_by(state) %>%
+  mutate(average_profit = mean(profit)) %>%
+  select(state, average_profit) %>%
+  arrange(desc(average_profit)) %>%
+  distinct() %>%
+  head(10)
+```
 
 
 ## Model Fitting
