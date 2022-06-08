@@ -1,0 +1,272 @@
+---
+title: "Stat 301-3 Final Report"
+author: "Data Sci Buds (Pranav, Lily, Minjee, Tammy)"
+date: '2022-06-07'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+    code_folding: "hide"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = F, warning = F, error = F}
+#load packages 
+library(tidyverse)
+library(tidymodels)
+library(janitor)
+library(naniar)
+library(ggplot2)
+
+superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
+  clean_names() %>% 
+  mutate(
+    ship_mode = factor(ship_mode),
+    segment = factor(segment),
+    city = factor(city),
+    state = factor(state),
+    region = factor(region),
+    category = factor(category),
+    sub_category = factor(sub_category)
+  )
+```
+
+## EDA
+
+
+## MODEL FITTING
+```{r, message = F, error = F, warning = F}
+# data splitting
+superstore_split <- 
+  initial_split(superstore_dat,
+                prop = .8,
+                strata = profit)
+
+superstore_train <- training(superstore_split)
+superstore_test <- testing(superstore_split)
+
+# set folds
+superstore_resamples <- 
+  superstore_train %>% 
+  vfold_cv(v = 5, repeats = 3, strata = profit)
+
+# set up recipe
+superstore_rec <- recipe(profit ~ ., data = superstore_dat) %>%
+  step_rm(row_id, order_id, order_date, ship_date, customer_id, customer_name,
+          country, postal_code, product_id, product_name) %>%
+  step_other(all_nominal_predictors()) %>%  
+  step_dummy(all_nominal_predictors()) %>%
+  step_normalize(all_numeric_predictors()) %>% 
+  step_nzv(all_predictors())
+
+# load recipe
+load(file = "model_info/model_setup.rda")
+```
+
+### Elastic Net
+```{r, eval = F}
+# define model
+enet_spec <- 
+  linear_reg(mode = "regression",
+             penalty = tune(), 
+             mixture = tune()) %>% 
+  set_engine("glmnet")
+
+# set up/define tuning grid
+enet_params <- parameters(enet_spec)
+enet_grid <- grid_regular(enet_params, levels = 3)
+
+# workflow
+enet_workflow <- workflow() %>% 
+  add_model(enet_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+load(file = "results/tuned_models.rda")
+
+show_best(enet_tuned, metric = "rmse") %>% head(1)
+```
+
+### K Nearest Neighbor
+```{r, eval = F}
+# define model
+knn_spec <- nearest_neighbor(mode = "regression",
+                             neighbors = tune()) %>%
+  set_engine("kknn") 
+
+# set up/define tuning grid
+knn_params <- parameters(knn_spec)
+knn_grid <- grid_regular(knn_params, levels = 3)
+
+# workflow
+knn_workflow <- workflow() %>% 
+  add_model(knn_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(knn_tuned, metric = "rmse") %>% head(1)
+```
+
+### Random Forest
+```{r, eval = F}
+# define model
+rf_spec <- rand_forest(mode = "regression",
+                       min_n = tune(),
+                       mtry = tune()) %>% 
+  set_engine("ranger")
+
+# set up/define tuning grid
+rf_params <- parameters(rf_spec) %>% 
+  update(mtry = mtry(c(1, 20))) 
+
+rf_grid <- grid_regular(rf_params, levels = 3)
+
+# workflow
+rf_workflow <- workflow() %>% 
+  add_model(rf_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(rf_tuned, metric = "rmse") %>% head(1)
+```
+
+### Boosted Tree
+```{r, eval = F}
+# define model
+boost_spec <- boost_tree(mode = "regression",
+                         mtry = tune(),
+                         min_n = tune(),
+                         learn_rate = tune()) %>%
+  set_engine("xgboost")
+
+# set up/define tuning grid
+boost_params <- parameters(boost_spec) %>%
+  update(mtry = mtry(c(1, 20)),
+         learn_rate = learn_rate(c(-5, -0.2)))
+
+boost_grid <- grid_regular(boost_params, levels = 3)
+
+# workflow
+boost_workflow <- workflow() %>% 
+  add_model(boost_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(boost_tuned, metric = "rmse") %>% head(1)
+```
+
+### Support Vector Machine Polynomial
+```{r, eval = F}
+# define model
+svm_p_spec <- svm_poly(mode = "regression",
+                       cost = tune(), 
+                       degree = tune(),
+                       scale_factor = tune()) %>% 
+  set_engine("kernlab") 
+
+# set up/define tuning grid
+svm_p_params <- parameters(svm_p_spec)
+svm_p_grid <- grid_regular(svm_p_params, levels = 3)
+
+# workflow
+svm_r_workflow <- workflow() %>% 
+  add_model(svm_r_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(svm_p_tuned, metric = "rmse") %>% head(1)
+```
+
+### Support Vector Machine Radial Base Function
+```{r, eval = F}
+# define model
+svm_r_spec <- svm_rbf(mode = "regression",
+                      cost = tune(), 
+                      rbf_sigma = tune()) %>% 
+  set_engine("kernlab")
+
+# set up/define tuning grid
+svm_r_params <- parameters(svm_r_spec)
+svm_r_grid <- grid_regular(svm_r_params, levels = 3)
+
+# workflow
+svm_p_workflow <- workflow() %>% 
+  add_model(svm_p_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(svm_r_tuned, metric = "rmse") %>% head(1)
+```
+
+### Single Layer Neural Network
+```{r, eval = F}
+# define model
+nnet_spec <- mlp(mode = "regression",
+                 hidden_units = tune(), 
+                 penalty = tune()) %>% 
+  set_engine("nnet")
+
+# set up/define tuning grid
+nnet_params <- parameters(nnet_spec)
+nnet_grid <- grid_regular(nnet_params, levels = 3)
+
+# workflow
+nnet_workflow <- workflow() %>% 
+  add_model(nnet_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(nnet_tuned, metric = "rmse") %>% head(1)
+```
+
+### MARS
+```{r, eval = F}
+# define model
+mars_spec <- mars(mode = "regression",
+                  num_terms = tune(),
+                  prod_degree = tune()) %>%  
+  set_engine("earth") 
+
+# set up/define tuning grid
+mars_params <- parameters(mars_spec)
+mars_grid <- grid_regular(mars_params, levels = 3)
+
+# workflow
+mars_workflow <- workflow() %>% 
+  add_model(mars_spec) %>% 
+  add_recipe(superstore_rec)
+```
+
+```{r}
+show_best(mars_tuned, metric = "rmse") %>% head(1)
+```
+
+## Best Model Fitting
+```{r}
+load("results/best_model_fit_metric.rda")
+
+svm_p_rmse_test
+```
+
+## Debrief and Next Steps
+
+
+
+
+
+
+
+
+
+
+
+

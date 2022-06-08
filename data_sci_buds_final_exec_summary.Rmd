@@ -1,0 +1,107 @@
+---
+title: "Stat 301-3 Final Executive Summary"
+author: "Data Sci Buds (Pranav, Lily, Minjee, Tammy)"
+date: '2022-06-07'
+output:
+  html_document:
+    toc: true
+    toc_float: true
+    highlight: "tango"
+    code_folding: "hide"
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r, message = F, warning = F, echo = F}
+#load packages 
+library(tidyverse)
+library(tidymodels)
+library(janitor)
+library(naniar)
+library(ggplot2)
+
+superstore_dat <- read_csv(file = "data/unprocessed/Superstore_data.csv") %>% 
+  clean_names() %>% 
+  mutate(
+    ship_mode = factor(ship_mode),
+    segment = factor(segment),
+    city = factor(city),
+    state = factor(state),
+    region = factor(region),
+    category = factor(category),
+    sub_category = factor(sub_category)
+  )
+```
+
+```{r, echo = F}
+load(file = "model_info/model_setup.rda")
+load(file = "results/tuned_models.rda")
+```
+
+## EDA
+
+
+## Model Fitting
+### Elastic Net
+```{r, echo = F}
+show_best(enet_tuned, metric = "rmse") %>% head(1)
+```
+
+
+### K Nearest Neighbor
+```{r, echo = F}
+show_best(knn_tuned, metric = "rmse") %>% head(1)
+```
+
+
+### Random Forest
+```{r, echo = F}
+show_best(rf_tuned, metric = "rmse") %>% head(1)
+```
+
+### Boosted Tree
+```{r, echo = F}
+show_best(boost_tuned, metric = "rmse") %>% head(1)
+```
+
+### Support Vector Machine Polynomial
+```{r, echo = F}
+show_best(svm_p_tuned, metric = "rmse") %>% head(1)
+```
+
+### Support Vector Machine Radial Base Function
+```{r, echo = F}
+show_best(svm_r_tuned, metric = "rmse") %>% head(1)
+```
+
+### Single Layer Neural Network
+```{r, echo = F}
+show_best(nnet_tuned, metric = "rmse") %>% head(1)
+```
+
+### MARS
+```{r, echo = F}
+show_best(mars_tuned, metric = "rmse") %>% head(1)
+```
+
+## Best Model Fitting
+```{r, echo = F}
+load("results/best_model_fit_metric.rda")
+
+svm_p_rmse_test
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
