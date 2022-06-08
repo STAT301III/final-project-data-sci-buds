@@ -13,7 +13,7 @@ editor_options:
 ---
 
 ## Data and Research Question
-The dataset involves purchase information for different products sold in a large superstore. The dataset was collected by the company itself. Each row is a customer transaction, and the columns represent different information for that transaction (like product name, quantity sold, profit, etc.). Our research question is: what variables affect how much profit the company earns on a specific transaction? 
+The dataset involves purchase information for different products sold in a large superstore. The dataset was collected by the company itself. Each row is a customer transaction, and the columns represent different information for that transaction (like product name, quantity sold, profit, etc.). Our research question is: How can we best predict profit given information about a particular transaction?
 <br>
 **Citation:** https://www.kaggle.com/datasets/vivek468/superstore-dataset-final
 
@@ -86,7 +86,7 @@ superstore_dat %>%
   )
 ```
 
-From the table below, we can see that Vermont is highest in profit and second highest in sales, followed by Rhode Island, Indiana, Montana, and Minnesota. 
+From the table below, we can see that Vermont is highest in profit, followed by Rhode Island, Indiana, Montana, and Minnesota. 
 
 ```{r, message = F, warning = F}
 # bivariate table - top 10 states in profit 
@@ -347,7 +347,9 @@ show_best(mars_tuned, metric = "rmse") %>% head(1)
 
 ## Best Model Fitting
 
-We can see from all 8 models above that the best model is the support vector machine polynomial model, which yielded the lowest rmse of 94.9. The other models that  We then fit this winning model to the testing set, which ended up yielding a higher rmse of 167.
+Compared to all 8 models, the best model is the support vector machine polynomial model, which yielded the lowest rmse of 94.9. The second best model is the random forest model, which has an rmse of 110, followed by the boosted tree model with an rmse of 112. The rest of the models have much higher rmses: MARS has an rmse of 155, the k nearest neighbors model has an rmse of 170, the neural network model has an rmse of 178, the elastic net model has an rmse of 181, and the worst model was the support vector machine radial basis function with an rmse of 190. 
+<br>
+We fit the winning model - the support vector machine polynomial model - to the testing set, which ended up yielding a higher rmse of 167. This is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data that is unknown/not common that may give more errors or misclassification when doing prediction. Although the rmse is higher when fit to the testing set, it is still better than most of the models' rmses that were only fit to the training set so far.
 ```{r}
 load("results/best_model_fit_metric.rda")
 
@@ -356,7 +358,7 @@ svm_p_rmse_test
 
 ## Debrief and Next Steps
 
-Overall, we tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network
+Overall, we tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. We concluded that the support vector machine polynomial model was the best model since it had the lowest rmse, although the rmse did increase once fit to the testing set. If we wanted to create a model that is better than our current best model, we could have tried experimenting with a couple different recipes by creating interactions or removing more predictors. We also could have tried different tuning parameters, specifically for random forest and boosted tree. 
 
 
 
