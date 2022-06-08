@@ -143,7 +143,11 @@ svm_p_rmse_test
 ## Debrief and Next Steps
 We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. If we wanted to create a model that is better than our current best model, we could have tried experimenting with a couple different recipes by creating interactions or removing more predictors. We also could have tried different tuning parameters, specifically for random forest and boosted tree. 
 
+## GitHub Repo Link
 
+<br>
+
+https://github.com/STAT301III/final-project-data-sci-buds.git
 
 
 
