@@ -141,7 +141,7 @@ svm_p_rmse_test
 ```
 
 ## Debrief (Key Findings) and Next Steps
-We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. Hence, some key findings were that SVM polynomial is best-suited and that the SVM radial was worst-suited for prediction in this dataset. Therefore, it is clear that the type of SVM model makes a big difference (poly vs radial). If we wanted to create a better model, we could have tried using different recipes by creating interactions, including more step functions, or removing more predictors. We also could have tried different tuning parameters (and ranges), specifically for boosted tree and random forest. 
+We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. Hence, some key findings were that 1) SVM polynomial is best-suited and that 2) the SVM radial was worst-suited for prediction in this dataset. Therefore, it is clear that the type of SVM model makes a big difference (poly vs radial). If we wanted to create a better model, we could have tried using different recipes by creating interactions, including more step functions, or removing more predictors. We also could have tried different tuning parameters (and ranges), specifically for boosted tree and random forest. 
 
 ## GitHub Repo Link
 
