@@ -14,7 +14,7 @@ editor_options:
 
 ## Data and Research Question
 
-Our dataset includes purchase information, such as product name, quantity sold, and profit, for different products sold in a large superstore. This superstore sells a variety of products, including furniture and office supplies to customers across the US. Our research question is: How can we best predict profit given information about a particular transaction? We believe that the variables category, sales, quantity, and discount will be the most useful predictors. 
+Our dataset includes purchase information, such as product name, quantity sold, and profit, for different products sold in a large superstore. This superstore sells a variety of products, including furniture and office supplies to customers across the US. Our research question is how can we best predict profit given information about a particular transaction? We believe that the variables category, sales, quantity, and discount will be the most useful predictors. 
 
 <br>
 
@@ -132,7 +132,7 @@ show_best(mars_tuned, metric = "rmse") %>% head(1)
 ## Best Model Fitting
 From the 8 models, we see the best model is the support vector machine polynomial model with the lowest rmse of 94.9. The second best model is the random forest model, which has an rmse of 110, while the worst model was the support vector machine radial basis function with an rmse of 190. 
 <br>
-We fit the support vector machine polynomial model to the testing set and predicted with the test set, which ended up yielding a higher rmse of 167—still better than most of the models' rmses from the training folds so far. This phenomenon of the rmse being higher when fit to the testing data is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data that is unknown/not common that may give more errors or misclassification when doing prediction. 
+We fit the support vector machine polynomial model to the testing set and predicted with the test set, which ended up yielding a higher rmse of 167—still better than most of the models' rmses from the training folds so far. This phenomenon of the rmse being higher when fit to the testing data is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data with different distributions that could cause prediction errors. Overfitting to the training data is certainly possible to an extent as well.
 
 ```{r, echo = F}
 load("results/best_model_fit_metric.rda")
@@ -140,22 +140,11 @@ load("results/best_model_fit_metric.rda")
 svm_p_rmse_test
 ```
 
-## Debrief and Next Steps
-We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. If we wanted to create a better model, we could have tried using different recipes by creating interactions, including more step functions, or removing more predictors. We also could have tried different tuning parameters (and ranges), specifically for boosted tree and random forest. 
+## Debrief (Key Findings) and Next Steps
+We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. Hence, some key findings were that SVM polynomial is best-suited and that the SVM radial was worst-suited for prediction in this dataset. Therefore, it is clear that the type of SVM model makes a big difference (poly vs radial). If we wanted to create a better model, we could have tried using different recipes by creating interactions, including more step functions, or removing more predictors. We also could have tried different tuning parameters (and ranges), specifically for boosted tree and random forest. 
 
 ## GitHub Repo Link
 
 <br>
 
 https://github.com/STAT301III/final-project-data-sci-buds.git
-
-
-
-
-
-
-
-
-
-
-

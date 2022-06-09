@@ -1677,9 +1677,16 @@ div.tocify {
 in a large superstore. The dataset was collected by the company itself.
 Each row is a customer transaction, and the columns represent different
 information for that transaction (like product name, quantity sold,
-profit, etc.). Our research question is: How can we best predict profit
-given information about a particular transaction? <br>
-<strong>Citation:</strong> <a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final" class="uri">https://www.kaggle.com/datasets/vivek468/superstore-dataset-final</a></p>
+profit, etc.).</p>
+<p><br></p>
+<p>This dataset is very interesting, and specifically we want to look
+into what the company probably cares most about: profit. We would bet
+that the company already has lots of complex algorithms attempting to
+maximize and predict profit. We also want to play around with this
+variable. Hence, our research question is: How can we best predict
+profit given information about a particular transaction?</p>
+<p><br></p>
+<p><strong>Citation:</strong> <a href="https://www.kaggle.com/datasets/vivek468/superstore-dataset-final" class="uri">https://www.kaggle.com/datasets/vivek468/superstore-dataset-final</a></p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">#load packages </span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidymodels)</span>
@@ -2065,11 +2072,10 @@ was the support vector machine radial basis function with an rmse of
 polynomial model - to the entire training set and then predicted using
 the test set, which ended up yielding a higher rmse of 167. This is
 likely because the training data is assessed on data that has been
-learnt before, while the test dataset may have data that is unknown/not
-common that may give more errors or misclassification when doing
-prediction. Although the rmse is higher when fit to the testing set, it
-is still better than most of the models’ rmses that were only fit to the
-training set so far.</p>
+learnt before, while the test dataset may have data that is not common
+that may give more errors when doing prediction. Although the rmse is
+higher when fit to the testing set, it is still better than most of the
+models’ rmses that were only fit to the training set so far.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;results/best_model_fit_metric.rda&quot;</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>svm_p_rmse_test</span></code></pre></div>
@@ -2085,12 +2091,21 @@ neighbors, boosted tree, random forest, support vector machine
 polynomial, support vector machine radial, single layer neural network,
 and MARS. We concluded that the support vector machine polynomial model
 was the best model since it had the lowest rmse, although the rmse did
-increase once predictions were made on the testing set. If we wanted to
-create a model that is better than our current best model, we could have
-tried experimenting with a couple different recipes by creating
-interactions or removing more predictors. We also could have tried
-different tuning parameters, specifically for random forest and boosted
-tree.</p>
+increase once predictions were made on the testing set. SVM models are
+generally good when there are a relatively low number of samples and
+does a solid job of avoiding excessive overfitting—this could have
+played a role in its performance in this case. More information about
+each product—such as a brand ranking (for example, how nice the brand is
+from 1-10)—could have helped make a better model. Also, to create a
+better model, to we could have tried experimenting with a couple
+different recipes by creating interactions or removing more predictors.
+We also could have tried different tuning parameters, specifically for
+random forest and boosted tree.</p>
+<p><br></p>
+<p>After this project, we are wondering if we can also use this data to
+predict revenue, or sales for a certain product. It would be interesting
+to see if revenue can be better predicted—is profit more sporadic and
+just caused by arbitrary markups?</p>
 </div>
 <div id="github-repo-link" class="section level2">
 <h2>GitHub Repo Link</h2>

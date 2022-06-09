@@ -1574,7 +1574,7 @@ div.tocify {
 quantity sold, and profit, for different products sold in a large
 superstore. This superstore sells a variety of products, including
 furniture and office supplies to customers across the US. Our research
-question is: How can we best predict profit given information about a
+question is how can we best predict profit given information about a
 particular transaction? We believe that the variables category, sales,
 quantity, and discount will be the most useful predictors.</p>
 <p><br></p>
@@ -1671,34 +1671,38 @@ an rmse of 155.</p>
 </div>
 <div id="best-model-fitting" class="section level2">
 <h2>Best Model Fitting</h2>
-<p>We can see from all 8 models above that the best model is the support
-vector machine polynomial model, which yielded the lowest rmse of 94.9.
-The second best model is the random forest model, which has an rmse of
-110, while the worst model was the support vector machine radial basis
-function with an rmse of 190. <br> We fit the support vector machine
-polynomial model to the testing set, which ended up yielding a higher
-rmse of 167, which is still better than most of the models’ rmses that
-were only fit to the training set so far. This phenomenon of the rmse
-being higher when fit to the testing data is likely because the training
-data is assessed on data that has been learnt before, while the test
-dataset may have data that is unknown/not common that may give more
-errors or misclassification when doing prediction.</p>
+<p>From the 8 models, we see the best model is the support vector
+machine polynomial model with the lowest rmse of 94.9. The second best
+model is the random forest model, which has an rmse of 110, while the
+worst model was the support vector machine radial basis function with an
+rmse of 190. <br> We fit the support vector machine polynomial model to
+the testing set and predicted with the test set, which ended up yielding
+a higher rmse of 167—still better than most of the models’ rmses from
+the training folds so far. This phenomenon of the rmse being higher when
+fit to the testing data is likely because the training data is assessed
+on data that has been learnt before, while the test dataset may have
+data with different distributions that could cause prediction errors.
+Overfitting to the training data is certainly possible to an extent as
+well.</p>
 <pre><code>## # A tibble: 1 × 3
 ##   .metric .estimator .estimate
 ##   &lt;chr&gt;   &lt;chr&gt;          &lt;dbl&gt;
 ## 1 rmse    standard        167.</code></pre>
 </div>
-<div id="debrief-and-next-steps" class="section level2">
-<h2>Debrief and Next Steps</h2>
+<div id="debrief-key-findings-and-next-steps" class="section level2">
+<h2>Debrief (Key Findings) and Next Steps</h2>
 <p>We tested a variety of 8 models: elastic net, k nearest neighbors,
 boosted tree, random forest, support vector machine polynomial, support
 vector machine radial, single layer neural network, and MARS. The best
 model with the lowest rmse was the support vector machine polynomial
-model. If we wanted to create a model that is better than our current
-best model, we could have tried experimenting with a couple different
-recipes by creating interactions or removing more predictors. We also
-could have tried different tuning parameters, specifically for random
-forest and boosted tree.</p>
+model. Hence, some key findings were that SVM polynomial is best-suited
+and that the SVM radial was worst-suited for prediction in this dataset.
+Therefore, it is clear that the type of SVM model makes a big difference
+(poly vs radial). If we wanted to create a better model, we could have
+tried using different recipes by creating interactions, including more
+step functions, or removing more predictors. We also could have tried
+different tuning parameters (and ranges), specifically for boosted tree
+and random forest.</p>
 </div>
 <div id="github-repo-link" class="section level2">
 <h2>GitHub Repo Link</h2>
