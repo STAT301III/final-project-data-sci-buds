@@ -52,7 +52,7 @@ load(file = "results/tuned_models.rda")
 
 According to the univariate profit graph below, profit peaks at around $10-15 per product transaction.
 
-```{r, message = F, warning = F, echo = F}
+```{r, message = F, warning = F}
 # univariate profit graph
 ggplot(superstore_dat, aes(profit)) +
   geom_density() +
@@ -62,7 +62,7 @@ ggplot(superstore_dat, aes(profit)) +
 
 The bivariate sub-category graph shows that the copier subcategory brings substantially more profit than other subcategories, with an average of 800. We can conclude that the subcategory of profit will be important when predicting profit, especially because of the huge profits brought by copiers. 
 
-```{r, message = F, warning = F, echo = F}
+```{r, message = F, warning = F}
 # bivariate sub-category graph
 superstore_dat %>%
   group_by(sub_category) %>%
@@ -81,51 +81,51 @@ superstore_dat %>%
 ## Model Fitting
 ### Elastic Net
 The best elastic net model has a penalty of 1 and a mixture of 0.05, which yielded an rmse of 181. 
-```{r, echo = F}
+```{r}
 show_best(enet_tuned, metric = "rmse") %>% head(1)
 ```
 
 
 ### K Nearest Neighbor
 The best k nearest neighbors model had 8 neighbors, which yielded an rmse of 170.
-```{r, echo = F}
+```{r}
 show_best(knn_tuned, metric = "rmse") %>% head(1)
 ```
 
 
 ### Random Forest
 The best random forest model has an mtry of 20 and a min_n of 2, yielding an rmse of 110.
-```{r, echo = F}
+```{r}
 show_best(rf_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Boosted Tree
 The best boosted tree model has an mtry of 20, min_n of 2, and a learn rate of 0.631. The rmse is 112.
-```{r, echo = F}
+```{r}
 show_best(boost_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Support Vector Machine Polynomial
 The best support vector machine polynomial model has a cost of 32, degree of 2, an a scale factor of 0.1, which yielded an rmse of 94.9.
-```{r, echo = F}
+```{r}
 show_best(svm_p_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Support Vector Machine Radial Base Function
 The best support vector machine radial basis function model has a cost of 32 and an rbf_sigma of 0.00001, which yielded an rmse of 190, meaning that it is one of our worse models because of its high rmse. 
-```{r, echo = F}
+```{r}
 show_best(svm_r_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### Single Layer Neural Network
 The best single layer neural network model has 10 hidden_units and a penalty of 1, which yielded an rmse of 178.
-```{r, echo = F}
+```{r}
 show_best(nnet_tuned, metric = "rmse") %>% head(1)
 ```
 
 ### MARS
 The best MARS model has 5 num_terms and a prod_degree of 2, yielding an rmse of 155. 
-```{r, echo = F}
+```{r}
 show_best(mars_tuned, metric = "rmse") %>% head(1)
 ```
 
@@ -134,7 +134,7 @@ From the 8 models, we see the best model is the support vector machine polynomia
 <br>
 We fit the support vector machine polynomial model to the testing set and predicted with the test set, which ended up yielding a higher rmse of 167—still better than most of the models' rmses from the training folds so far. This phenomenon of the rmse being higher when fit to the testing data is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data with different distributions that could cause prediction errors. Overfitting to the training data is certainly possible to an extent as well.
 
-```{r, echo = F}
+```{r}
 load("results/best_model_fit_metric.rda")
 
 svm_p_rmse_test
