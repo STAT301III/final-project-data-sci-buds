@@ -2062,13 +2062,14 @@ neighbors model has an rmse of 170, the neural network model has an rmse
 of 178, the elastic net model has an rmse of 181, and the worst model
 was the support vector machine radial basis function with an rmse of
 190. <br> We fit the winning model - the support vector machine
-polynomial model - to the testing set, which ended up yielding a higher
-rmse of 167. This is likely because the training data is assessed on
-data that has been learnt before, while the test dataset may have data
-that is unknown/not common that may give more errors or
-misclassification when doing prediction. Although the rmse is higher
-when fit to the testing set, it is still better than most of the models’
-rmses that were only fit to the training set so far.</p>
+polynomial model - to the entire training set and then predicted using
+the test set, which ended up yielding a higher rmse of 167. This is
+likely because the training data is assessed on data that has been
+learnt before, while the test dataset may have data that is unknown/not
+common that may give more errors or misclassification when doing
+prediction. Although the rmse is higher when fit to the testing set, it
+is still better than most of the models’ rmses that were only fit to the
+training set so far.</p>
 <div class="sourceCode" id="cb33"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="fu">load</span>(<span class="st">&quot;results/best_model_fit_metric.rda&quot;</span>)</span>
 <span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>svm_p_rmse_test</span></code></pre></div>
@@ -2084,11 +2085,12 @@ neighbors, boosted tree, random forest, support vector machine
 polynomial, support vector machine radial, single layer neural network,
 and MARS. We concluded that the support vector machine polynomial model
 was the best model since it had the lowest rmse, although the rmse did
-increase once fit to the testing set. If we wanted to create a model
-that is better than our current best model, we could have tried
-experimenting with a couple different recipes by creating interactions
-or removing more predictors. We also could have tried different tuning
-parameters, specifically for random forest and boosted tree.</p>
+increase once predictions were made on the testing set. If we wanted to
+create a model that is better than our current best model, we could have
+tried experimenting with a couple different recipes by creating
+interactions or removing more predictors. We also could have tried
+different tuning parameters, specifically for random forest and boosted
+tree.</p>
 </div>
 <div id="github-repo-link" class="section level2">
 <h2>GitHub Repo Link</h2>

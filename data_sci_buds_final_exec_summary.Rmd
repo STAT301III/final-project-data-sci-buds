@@ -130,9 +130,9 @@ show_best(mars_tuned, metric = "rmse") %>% head(1)
 ```
 
 ## Best Model Fitting
-We can see from all 8 models above that the best model is the support vector machine polynomial model, which yielded the lowest rmse of 94.9. The second best model is the random forest model, which has an rmse of 110, while the worst model was the support vector machine radial basis function with an rmse of 190. 
+From the 8 models, we see the best model is the support vector machine polynomial model with the lowest rmse of 94.9. The second best model is the random forest model, which has an rmse of 110, while the worst model was the support vector machine radial basis function with an rmse of 190. 
 <br>
-We fit the support vector machine polynomial model to the testing set, which ended up yielding a higher rmse of 167, which is still better than most of the models' rmses that were only fit to the training set so far. This phenomenon of the rmse being higher when fit to the testing data is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data that is unknown/not common that may give more errors or misclassification when doing prediction. 
+We fit the support vector machine polynomial model to the testing set and predicted with the test set, which ended up yielding a higher rmse of 167—still better than most of the models' rmses from the training folds so far. This phenomenon of the rmse being higher when fit to the testing data is likely because the training data is assessed on data that has been learnt before, while the test dataset may have data that is unknown/not common that may give more errors or misclassification when doing prediction. 
 
 ```{r, echo = F}
 load("results/best_model_fit_metric.rda")
@@ -141,7 +141,7 @@ svm_p_rmse_test
 ```
 
 ## Debrief and Next Steps
-We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. If we wanted to create a model that is better than our current best model, we could have tried experimenting with a couple different recipes by creating interactions or removing more predictors. We also could have tried different tuning parameters, specifically for random forest and boosted tree. 
+We tested a variety of 8 models: elastic net, k nearest neighbors, boosted tree, random forest, support vector machine polynomial, support vector machine radial, single layer neural network, and MARS. The best model with the lowest rmse was the support vector machine polynomial model. If we wanted to create a better model, we could have tried using different recipes by creating interactions, including more step functions, or removing more predictors. We also could have tried different tuning parameters (and ranges), specifically for boosted tree and random forest. 
 
 ## GitHub Repo Link
 
